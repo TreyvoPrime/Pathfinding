@@ -6,18 +6,35 @@ const widthInput = document.getElementById("width")
 const heightInput = document.getElementById("height")
 const obstacle = document.getElementById("obstacle")
 const draw = document.getElementById("draw")
+let grid = document.querySelector("table")
+const gridTable = document.getElementById("grid"); 
 //variable control
 grid = []
-function applier() {
+function applier(gridX, gridY) {
     const width = Number(widthInput.value)
     const height = Number(heightInput.value)
+    let gridData = [];
+    gridTable.innerHTML -="";
+    //generate width for grid
     for (let i=0; i < width; i++) {
         let row = []
-        for (let p=0; p < height; p++)
-        row.push((i+1) * (p+1))
-    grid.push(row)
-    console.log(grid)
+        let tr = document.createElement("tr")
+        //generate height for the grid 
+        for (let p=0; p < height; p++) {
+            let td = document.createElement("td")
+            td.textContent = `${i}, ${p}`
+            tr.appendChild(td)
+            row.push(`${i}, ${p}`)
+
+        }
+        //apply grid to page
+        gridData.push(row)
+        gridTable.appendChild(tr)
+        console.log(grid)
+
     }
+
 }
+
 //take in the width and height inputs
 draw.addEventListener("click", applier)
