@@ -7,10 +7,10 @@ const heightInput = document.getElementById("height")
 const obstacle = document.getElementById("obstacle")
 const draw = document.getElementById("draw")
 let grid = document.querySelector("table")
-const gridTable = document.getElementById("grid"); 
+const gridTable = document.getElementById("grid");
 const starting_button = document.getElementById("starting")
 const reset_button = document.getElementById("reset")
-let  starting_blocks_added = 0;
+let starting_blocks_added = 0;
 let ending_blocks_added = 0;
 //variable control
 grid = []
@@ -48,15 +48,16 @@ function gridMaker() {
 }
 //staring block class to detect where the starting block was place 
 starting_block_mode = false;
+ending_block_mode = false;
 class StartingBlock {
-    constructor(x,y) {
+    constructor(x, y) {
         this.x = x
         this.y = y
     }
 
 }
 class EndingBlock {
-    constructor(x,y) {
+    constructor(x, y) {
         this.x = x
         this.y = y
     }
@@ -95,7 +96,7 @@ function cellSelect(event) {
 
         const StartingPosition = new StartingBlock(x, y);
 
-        starting_blocks_added++; 
+        starting_blocks_added++;
         starting_block_mode = false;
     }
 }
@@ -117,10 +118,11 @@ function cellSelectEnding(event) {
 
         const EndingPosition = new EndingBlock(x, y);
 
-        ending_blocks_added++; 
+        ending_blocks_added++;
         ending_block_mode = false;
     }
 }
+
 gridTable.addEventListener("click", cellSelect)
 gridTable.addEventListener("click", cellSelectEnding)
 
@@ -139,3 +141,9 @@ reset_button.addEventListener("click", function () {
 
     gridTable.innerHTML = "";
 });
+
+
+function bfs(gridData) {
+    const startCell = grid[StartingPosition.x][StartingPosition.y];
+    const endCell = grid[EndingPosition.x][EndingPosition.y];
+}
