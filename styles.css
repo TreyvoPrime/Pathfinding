@@ -17,8 +17,15 @@ td {
     height: 40px;
     text-align: center;
     cursor: pointer;
+    
 }
 
 td:hover {
     background-color: #ddd;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
