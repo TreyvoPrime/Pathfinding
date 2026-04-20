@@ -43,12 +43,13 @@ function gridMaker() {
         gridData.push(row);
         gridTable.appendChild(tr);
     }
-
+   
     console.log(gridData);
 }
 //staring block class to detect where the starting block was place 
 starting_block_mode = false;
 ending_block_mode = false;
+obstacle_place_mode = false;
 class StartingBlock {
     constructor(x, y) {
         this.x = x
@@ -63,16 +64,26 @@ class EndingBlock {
     }
 
 }
+class ObstaclePlacer {
+    constructor(x, y) {
+        this.x = x
+        this.y = y
+    }a
+}
 //starting button selected so its in the right mode
-start.addEventListener('click', function () {
+start.addEventListener("click", function () {
     starting_block_mode = true; // Set to true when clicked
     console.log(starting_block_mode)
 });
-end.addEventListener('click', function () {
+end.addEventListener("click", function () {
     ending_block_mode = true; // Set to true when clicked
     console.log(ending_block_mode)
 });
+obstacle.addEventListener("click", function () {
+    obstacle_place_mode = true;
+    console.log(obstacle_place_mode)
 
+});
 
 //take in the width and height inputs
 draw.addEventListener("click", gridMaker)
@@ -92,10 +103,10 @@ function cellSelect(event) {
         const y = Number(piece_detected.dataset.y);
 
         console.log("Clicked:", x, y);
-        console.log(starting_block_mode);
 
         const StartingPosition = new StartingBlock(x, y);
-
+        let startCell = grid[StartingPosition.x][StartingPosition.y];
+        console.log(startCell)
         starting_blocks_added++;
         starting_block_mode = false;
     }
@@ -122,15 +133,40 @@ function cellSelectEnding(event) {
         ending_block_mode = false;
     }
 }
+// detect where obstacle is placed
+function cellSelectObstacle(event) {
+    const piece_detected = event.target.closest("td, th");
+    if (!piece_detected) return;
+
+    if (obstacle_place_mode === true) {
+        piece_detected.style.backgroundColor = "pink";
+
+        console.log('You clicked a row');
+
+        const x = Number(piece_detected.dataset.x);
+        const y = Number(piece_detected.dataset.y);
+
+        console.log("Clicked:", x, y);
+        console.log(starting_block_mode);
+
+        const Obstacle = new ObstaclePlacer(x, y);
+
+        ending_blocks_added++;
+        ending_block_mode = false;
+    }
+}
+
 
 gridTable.addEventListener("click", cellSelect)
 gridTable.addEventListener("click", cellSelectEnding)
+gridTable.addEventListener("click", cellSelectObstacle)
 
 reset_button.addEventListener("click", function () {
     starting_blocks_added = 0;
-    starting_block_mode = false;
+    starting_block_mode = false
     ending_blocks_added = 0;
-    ending_block_mode = false;
+    ending_block_mode = false
+    obstacle_place_mode = false
     widthInput.value = "";
     heightInput.value = "";
 
@@ -142,8 +178,21 @@ reset_button.addEventListener("click", function () {
     gridTable.innerHTML = "";
 });
 
+function bfs(gridData, startCell, endCell) {
+    const visited = new Set();
+    const queue = [start]
+    while (queue.length > 0) {
+        const node = queue.shift()
 
-function bfs(gridData) {
-    const startCell = grid[StartingPosition.x][StartingPosition.y];
-    const endCell = grid[EndingPosition.x][EndingPosition.y];
+        if (!visited.has(node)) {
+            console.log(node)
+            visited.add(node)
+
+        for (const neighbor of graph[node]) {
+            if (!visited.has(neighbor)) {
+                queue.push(neighbor)
+            }
+        }
+   }
+    }
 }
