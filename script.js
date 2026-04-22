@@ -109,12 +109,12 @@ function handleCellClick(event) {
     if (isNaN(x) || isNaN(y) || x >= grid[0]?.length || y >= grid.length) return;
 
     if (starting_block_mode && !startPos) {
-        cell.style.backgroundColor = "yellow";
+        cell.style.backgroundColor = "blue";
         startPos = { x, y };
         console.log("Start placed at:", x, y, grid[y][x]);
         starting_blocks_added = 1;
         starting_block_mode = false;
-        
+
     } else if (ending_block_mode && !endPos) {
         cell.style.backgroundColor = "brown";
         endPos = { x, y };
@@ -122,6 +122,7 @@ function handleCellClick(event) {
         ending_blocks_added = 1;
         ending_block_mode = false;
     } else if (obstacle_place_mode) {
+        cell.style.backgroundColor = "pink";
         cell.style.backgroundColor = "pink";
         obstacles.push({ x, y });
         console.log("Obstacle at:", x, y);
@@ -151,14 +152,56 @@ reset_button.addEventListener("click", function () {
 
     gridTable.innerHTML = "";
 });
-
+//bfs algorithm function
 function bfs(gridData, startPos, endPos) {
-    console.log(gridData);
-    queue = [gridData]
-    console.log(queue)
-}
+    const rows = gridData.length;
+    const cols = gridData[0].length;
 
+    const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
+
+    const queue = [];
+    visited[startPos.y][startPos.x] = true;
+    queue.push(startPos);
+
+    const dirs = [
+        [-1, 0],
+        [1, 0],  
+        [0, -1], 
+        [0, 1]   
+    ];
+
+    while (queue.length > 0) {
+        const { y, x } = queue.shift();
+        console.log(`Visited: (${y}, ${x})`);
+
+        if (y === endPos.y && x === endPos.x) {
+            return;
+        }
+
+        for (const [dy, dx] of dirs) {
+            const ny = y + dy;
+            const nx = x + dx;
+
+            if (
+                ny >= 0 && ny < rows &&
+                nx >= 0 && nx < cols &&
+                !visited[ny][nx]
+            ) {
+                visited[ny][nx] = true;
+                queue.push({ y: ny, x: nx });
+            }
+        }
+    }
+
+}
+function bfsVisualiser() {
+    const cells = event.target.closest("td");
+
+}
 bfs_start.addEventListener("click", () => {
+    if (!gridData.length) {
+        return;
+    }
     bfs(gridData, startPos, endPos);
 });
 
