@@ -153,7 +153,10 @@ reset_button.addEventListener("click", function () {
     gridTable.innerHTML = "";
 });
 //bfs algorithm function
-function bfs(gridData, startPos, endPos) {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function bfs(gridData, startPos, endPos) {
     const rows = gridData.length;
     const cols = gridData[0].length;
 
@@ -172,8 +175,10 @@ function bfs(gridData, startPos, endPos) {
 
     while (queue.length > 0) {
         const { y, x } = queue.shift();
+        colorCell(y, x, "green")
         console.log(`Visited: (${y}, ${x})`);
-
+        await sleep(100);
+        
         if (y === endPos.y && x === endPos.x) {
             return;
         }
@@ -194,14 +199,18 @@ function bfs(gridData, startPos, endPos) {
     }
 
 }
-function bfsVisualiser() {
-    const cells = event.target.closest("td");
-
-}
 bfs_start.addEventListener("click", () => {
     if (!gridData.length) {
         return;
     }
     bfs(gridData, startPos, endPos);
 });
+
+function colorCell(y,x, color) {
+    const cell = document.getElementById(`cell-${y}-${x}`)
+    if (cell) {
+        cell.style.backgroundColor = color
+        console.log("Cell")
+    }
+}
 
