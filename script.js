@@ -161,6 +161,7 @@ async function bfs(gridData, startPos, endPos) {
     const cols = gridData[0].length;
 
     const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
+    const previous = Array.from({ length: rows }, () => Array(cols).fill(null));
 
     const queue = [];
     visited[startPos.y][startPos.x] = true;
@@ -168,20 +169,16 @@ async function bfs(gridData, startPos, endPos) {
 
     const dirs = [
         [-1, 0],
-        [1, 0],  
-        [0, -1], 
-        [0, 1]   
+        [1, 0],
+        [0, -1],
+        [0, 1]
     ];
-
 
     while (queue.length > 0) {
         const { y, x } = queue.shift();
-        colorCell(y, x, "green")
-        console.log(`Visited: (${y}, ${x})`);
-        await sleep(100);
-        
+
         if (y === endPos.y && x === endPos.x) {
-            return;
+            break;
         }
 
         for (const [dy, dx] of dirs) {
@@ -194,21 +191,26 @@ async function bfs(gridData, startPos, endPos) {
                 !visited[ny][nx]
             ) {
                 visited[ny][nx] = true;
+                previous[ny][nx] = { y, x };
                 queue.push({ y: ny, x: nx });
             }
         }
     }
 
+    let current = endPos;
+
+    while (current) {
+        const { y, x } = current;
+
+        if (!(y === startPos.y && x === startPos.x) && !(y === endPos.y && x === endPos.x)) {
+            colorCell(y, x, "yellow");
+            await sleep(100);
+        }
+
+        current = previous[y][x];
+    }
 }
 bfs_start.addEventListener("click", () => {
-    alert("hello")
-    console.log("START POS:", startPos);
-    console.log("END POS:", endPos);
-
-    if (startPos === null || endPos === null) {
-        alert("Place a start and end cell first.");
-        return;
-    }
 
     bfs(gridData, startPos, endPos);
 });
