@@ -1,5 +1,4 @@
 //Starting variable presets
-
 const start = document.getElementById("starting")
 const end = document.getElementById("ending")
 const widthInput = document.getElementById("width")
@@ -8,41 +7,42 @@ const obstacle = document.getElementById("obstacle")
 const draw = document.getElementById("draw")
 const gridTable = document.getElementById("grid");
 const reset_button = document.getElementById("reset")
-const bfs_start = document.getElementById("start")
+const bfs_start = document.querySelector("#start");
 let starting_blocks_added = 0;
 let ending_blocks_added = 0;
 let obstacleCount = 0;
 let startPos = null;
 let endPos = null;
 let obstacles = [];
-// Grid data globals
 let grid = [];
 let gridData = [];
+//create grid
 function gridMaker() {
     const width = Number(widthInput.value);
     const height = Number(heightInput.value);
 
-    // Validate inputs
     if (isNaN(width) || isNaN(height)) {
         alert("Width and Height must be numbers");
         return;
     }
 
-    // Reuse global gridData
-    gridData.length = 0;  // Clear previous
+    gridData.length = 0;
     gridTable.innerHTML = "";
 
-    for (let i = 0; i < width; i++) {
+    for (let y = 0; y < height; y++) {
         let row = [];
         let tr = document.createElement("tr");
 
-        for (let p = 0; p < height; p++) {
+        for (let x = 0; x < width; x++) {
             let td = document.createElement("td");
-            td.textContent = `${i}, ${p}`;
+
+            td.id = `cell-${x}-${y}`;
+            td.textContent = `${x}, ${y}`;
+            td.dataset.x = x;
+            td.dataset.y = y;
+
             tr.appendChild(td);
-            row.push(`${i}, ${p}`);
-            td.dataset.x = i
-            td.dataset.y = p
+            row.push(`${x}, ${y}`);
         }
 
         gridData.push(row);
@@ -50,7 +50,6 @@ function gridMaker() {
     }
 
     grid = gridData;
-    console.log(gridData);
 }
 //staring block class to detect where the starting block was place 
 starting_block_mode = false;
@@ -82,11 +81,12 @@ class ObstaclePlacer {
 }
 //starting button selected so its in the right mode
 start.addEventListener("click", function () {
-    starting_block_mode = true; // Set to true when clicked
+    starting_block_mode = true; 
     console.log(starting_block_mode)
 });
+//ending button selected so its in the correct mode
 end.addEventListener("click", function () {
-    ending_block_mode = true; // Set to true when clicked
+    ending_block_mode = true;
     console.log(ending_block_mode)
 });
 obstacle.addEventListener("click", function () {
@@ -95,11 +95,11 @@ obstacle.addEventListener("click", function () {
 
 });
 
-//take in the width and height inputs
+//take in the width and height inputs and call the gridMaker function
 draw.addEventListener("click", gridMaker)
 
 
-//detect the cell that was selected for startingBlock 
+//detect the cell that was selected for startingBlock andEndingBlock
 function handleCellClick(event) {
     const cell = event.target.closest("td");
     if (!cell || !grid.length) return;
@@ -173,6 +173,7 @@ async function bfs(gridData, startPos, endPos) {
         [0, 1]   
     ];
 
+
     while (queue.length > 0) {
         const { y, x } = queue.shift();
         colorCell(y, x, "green")
@@ -200,17 +201,23 @@ async function bfs(gridData, startPos, endPos) {
 
 }
 bfs_start.addEventListener("click", () => {
-    if (!gridData.length) {
+    alert("hello")
+    console.log("START POS:", startPos);
+    console.log("END POS:", endPos);
+
+    if (startPos === null || endPos === null) {
+        alert("Place a start and end cell first.");
         return;
     }
+
     bfs(gridData, startPos, endPos);
 });
+function colorCell(y, x, color) {
+    const cell = document.querySelector(`td[data-x="${x}"][data-y="${y}"]`);
 
-function colorCell(y,x, color) {
-    const cell = document.getElementById(`cell-${y}-${x}`)
     if (cell) {
-        cell.style.backgroundColor = color
-        console.log("Cell")
+        cell.style.setProperty("background-color", color, "important");
+    } else {
+        console.log("Missing cell:", x, y);
     }
 }
-
