@@ -22,7 +22,7 @@ td {
 }
 
 td:hover {
-    background-color: #ddd;
+    outline: 2px solid #ddd;
 }
 .container {
     display: flex;
