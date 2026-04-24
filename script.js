@@ -3,17 +3,14 @@ const start = document.getElementById("starting")
 const end = document.getElementById("ending")
 const widthInput = document.getElementById("width")
 const heightInput = document.getElementById("height")
-const obstacle = document.getElementById("obstacle")
 const draw = document.getElementById("draw")
 const gridTable = document.getElementById("grid");
 const reset_button = document.getElementById("reset")
 const bfs_start = document.querySelector("#start");
 let starting_blocks_added = 0;
 let ending_blocks_added = 0;
-let obstacleCount = 0;
 let startPos = null;
 let endPos = null;
-let obstacles = [];
 let grid = [];
 let gridData = [];
 //create grid
@@ -54,7 +51,6 @@ function gridMaker() {
 //staring block class to detect where the starting block was place 
 starting_block_mode = false;
 ending_block_mode = false;
-obstacle_place_mode = false;
 class StartingBlock {
     constructor(x, y) {
         this.x = x
@@ -73,12 +69,7 @@ class EndingBlock {
         return `(${this.x}, ${this.y})`;
     }
 }
-class ObstaclePlacer {
-    constructor(x, y) {
-        this.x = x
-        this.y = y
-    }
-}
+
 //starting button selected so its in the right mode
 start.addEventListener("click", function () {
     starting_block_mode = true; 
@@ -88,11 +79,6 @@ start.addEventListener("click", function () {
 end.addEventListener("click", function () {
     ending_block_mode = true;
     console.log(ending_block_mode)
-});
-obstacle.addEventListener("click", function () {
-    obstacle_place_mode = true;
-    console.log(obstacle_place_mode)
-
 });
 
 //take in the width and height inputs and call the gridMaker function
@@ -121,12 +107,6 @@ function handleCellClick(event) {
         console.log("End placed at:", x, y);
         ending_blocks_added = 1;
         ending_block_mode = false;
-    } else if (obstacle_place_mode) {
-        cell.style.backgroundColor = "pink";
-        cell.style.backgroundColor = "pink";
-        obstacles.push({ x, y });
-        console.log("Obstacle at:", x, y);
-        obstacle_place_mode = false;
     }
 }
 
